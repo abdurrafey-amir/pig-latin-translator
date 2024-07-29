@@ -1,30 +1,23 @@
-def translate(text: str):
-    vowels = ('a', 'e', 'i', 'o', 'u')
-    rule1 = ('xr', 'yt')
+vowels = ['a', 'e', 'i', 'o', 'u']
+vowels_y = ['a', 'e', 'i', 'o', 'u', 'y']
+specials = ['xr', 'yt']
 
-    # Rule 1
-    if text[0].lower() in vowels or text[:2].lower() in rule1:
-        return text + 'ay'
+def translate(text):
+    piggyfied = []
 
-    # Rule 2
-    consonants = ''
-    for char in text:
-        if char.lower() not in vowels:
-            consonants += char
-        else:
-            break
-    return text[len(consonants):] + consonants + 'ay'
+    for word in text.split():
+        if word[0] in vowels or word[0:2] in specials:
+            piggyfied.append(word + 'ay')
+            continue
 
-    # Rule 3
-    if 'qu' in text:
-        index = text.index('qu')
-        return text[index+2:] + text[:index+2] + 'ay'
+        for pos in range(1, len(word)):
+            if word[pos] in vowels_y:
+                if word[pos] == 'u' and word[pos - 1] == 'q':
+                    pos += 1
+                piggyfied.append(word[pos:] + word[:pos] + 'ay')
+                break
+    return ' '.join(piggyfied)
 
-    # Rule 4
-    if 'y' in text:
-        index = text.index('y')
-        return text[index+1:] + text[:index+1] + 'ay'
-    
-
-inp = ('enter text: ')
-translate(inp)
+inp = input('enter text: ')
+print('pig-latin translation: ')
+print(translate(inp))
